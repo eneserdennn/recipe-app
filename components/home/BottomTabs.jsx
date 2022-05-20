@@ -1,37 +1,65 @@
-import { View, Text } from "react-native";
 import React from "react";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { TouchableOpacity } from "react-native";
+import { View } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Login from "../../screens/Login";
+import Recipe from "../../screens/Recipe";
+import Home from "../../screens/Home";
+
+import { COLORS, icons } from "../../constants";
+
+const Tab = createBottomTabNavigator();
+
+const screenOptions = {
+  headerShown: false,
+};
 
 const BottomTabs = () => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        margin: 10,
-        marginHorizontal: 30,
-        justifyContent: "space-between",
+    <Tab.Navigator
+      screenOptions={screenOptions}
+      tabBarOptions={{
+        showLabel: false,
+        style: {
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          elevation: 0,
+          backgroundColor: "red",
+          borderTopColor: "transparent",
+          height: 100,
+        },
       }}
     >
-      <Icon icon="home" text="Home" />
-      <Icon icon="search" text="Browse" />
-      <Icon icon="shopping-bag" text="Grocery" />
-      <Icon icon="receipt" text="Orders" />
-      <Icon icon="user" text="Account" />
-    </View>
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} icon={icons.home} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Login}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} icon={icons.search} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Bookmark"
+        component={Recipe}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <TabIcon focused={focused} icon={icons.bookmark} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 };
 
 export default BottomTabs;
-const Icon = (props) => (
-  <TouchableOpacity>
-    <View>
-      <FontAwesome5
-        name={props.icon}
-        size={24}
-        style={{ marginBottom: 3, alignSelf: "center" }}
-      />
-      <Text>{props.text}</Text>
-    </View>
-  </TouchableOpacity>
-);
