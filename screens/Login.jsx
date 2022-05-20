@@ -109,7 +109,6 @@ const Login = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.black }}>
-      <StatusBar barStyle="light-content" />
       {renderHeader()}
       {renderDetail()}
     </View>

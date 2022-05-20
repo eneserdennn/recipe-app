@@ -4,6 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Login from "../../screens/Login";
 import Recipe from "../../screens/Recipe";
 import Home from "../../screens/Home";
+import TabIcon from "../TabIcon";
 
 import { COLORS, icons } from "../../constants";
 
