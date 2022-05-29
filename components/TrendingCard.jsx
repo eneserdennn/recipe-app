@@ -55,7 +55,7 @@ const RecipeCardDetails = ({ recipeItem }) => {
           fontSize: 12,
         }}
       >
-        {recipeItem.duration} | {recipeItem.serving} Serving
+        {recipeItem.diff} | {recipeItem.serving} Porsiyon
       </Text>
     </View>
   );
@@ -97,7 +97,7 @@ const TrendingCard = ({ containerStyle, recipeItem, onPress }) => {
     >
       {/* Background Image */}
       <Image
-        source={recipeItem.image}
+        source={{ uri: recipeItem.image }}
         resizeMode="cover"
         style={{
           width: 250,

@@ -41,15 +41,7 @@ const BottomTabs = () => {
           ),
         }}
       />
-      <Tab.Screen
-        name="Search"
-        component={Login}
-        options={{
-          tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon={icons.search} />
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="Bookmark"
         component={Recipe}

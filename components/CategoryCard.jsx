@@ -16,9 +16,10 @@ const CategoryCard = ({ containerStyle, categoryItem, onPress }) => {
         ...containerStyle,
       }}
       onPress={onPress}
+      key={categoryItem.id}
     >
       <Image
-        source={categoryItem.image}
+        source={{ uri: categoryItem.image }}
         resizeMode="cover"
         style={{
           width: 100,
@@ -33,18 +34,16 @@ const CategoryCard = ({ containerStyle, categoryItem, onPress }) => {
         }}
       >
         {/* Name */}
-        <Text style={{ flex: 1, fontSize: 16, fontWeight: "bold" }}>
-          {categoryItem.name}
-        </Text>
-
-        {/* Servings */}
         <Text
           style={{
-            color: COLORS.gray,
-            fontSize: 12,
+            fontSize: 16,
+            fontWeight: "bold",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
           }}
         >
-          {categoryItem.duration} | {categoryItem.serving} Serving
+          {categoryItem.name}
         </Text>
       </View>
     </TouchableOpacity>

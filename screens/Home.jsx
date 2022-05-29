@@ -12,9 +12,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CategoryCard from "../components/CategoryCard";
 import TrendingCard from "../components/TrendingCard";
 
-import { COLORS, SIZES, icons, images, dummyData } from "../constants";
+import {
+  COLORS,
+  SIZES,
+  icons,
+  images,
+  dummyData,
+  database,
+  categories,
+} from "../constants";
 
 const Home = ({ navigation }) => {
+  const recipes = database.recipeData;
+
   const renderHeader = () => {
     return (
       <View
@@ -38,7 +48,7 @@ const Home = ({ navigation }) => {
               fontWeight: "bold",
             }}
           >
-            Hello User,
+            Merhaba Kullanıcı,
           </Text>
           <Text
             style={{
@@ -48,7 +58,7 @@ const Home = ({ navigation }) => {
               fontWeight: "bold",
             }}
           >
-            What can you cook today?
+            Bugün ne pişirebilirsin?
           </Text>
         </View>
         <TouchableOpacity onPress={() => console.log("Profile")}>
@@ -93,7 +103,7 @@ const Home = ({ navigation }) => {
             fontSize: 16,
           }}
           placeholderTextColor={COLORS.gray}
-          placeholder="Please add your ingredients"
+          placeholder="Lütfen malzemelerinizi ekleyin"
         ></TextInput>
       </View>
     );
@@ -118,7 +128,7 @@ const Home = ({ navigation }) => {
           }}
         >
           <Image
-            source={images.recipe}
+            source={recipes.image}
             style={{
               width: 80,
               height: 80,
@@ -137,13 +147,13 @@ const Home = ({ navigation }) => {
               fontSize: 16,
             }}
           >
-            You have 12 recipes that you can cook
+            Yapabileceğin 12 tarifin var
           </Text>
           <TouchableOpacity
             style={{
               marginTop: 10,
             }}
-            onPress={() => console.log("See Recipes")}
+            onPress={() => console.log(categories)}
           >
             <Text
               style={{
@@ -152,7 +162,7 @@ const Home = ({ navigation }) => {
                 fontSize: 14,
               }}
             >
-              See Recipes
+              Tarifleri Gör
             </Text>
           </TouchableOpacity>
         </View>
@@ -172,20 +182,25 @@ const Home = ({ navigation }) => {
             marginHorizontal: SIZES.padding,
             fontSize: 16,
             fontWeight: "bold",
+            marginBottom: SIZES.padding,
           }}
         >
-          Trending Recipe
+          Trend Tarifler
         </Text>
         <FlatList
-          data={dummyData.trendingRecipes}
+          style={{
+            backgroundColor: COLORS.lightGreen1,
+          }}
+          data={recipes}
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => `${item.id}`}
+          keyExtractor={(item) => item.id}
           renderItem={({ item, index }) => {
             return (
               <TrendingCard
                 containerStyle={{
                   marginLeft: index === 0 ? SIZES.padding : 0,
+                  marginBottom: 12,
                 }}
                 recipeItem={item}
                 onPress={() => navigation.navigate("Recipe", { recipe: item })}
@@ -215,7 +230,7 @@ const Home = ({ navigation }) => {
             fontWeight: "bold",
           }}
         >
-          Categories
+          Kategoriler
         </Text>
         {/* View All */}
         <TouchableOpacity onPress={() => console.log("View All")}>
@@ -225,7 +240,7 @@ const Home = ({ navigation }) => {
               fontSize: 14,
             }}
           >
-            View All
+            Hepsi
           </Text>
         </TouchableOpacity>
       </View>
@@ -240,7 +255,7 @@ const Home = ({ navigation }) => {
       }}
     >
       <FlatList
-        data={dummyData.categories}
+        data={categories}
         keyExtractor={(item) => `${item.id}`}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={
@@ -249,6 +264,7 @@ const Home = ({ navigation }) => {
             {renderHeader()}
             {/* Search Bar */}
             {renderSearchBar()}
+
             {/* See Recipe Card */}
             {renderSeeRecipeCard()}
             {/* Trending Section */}
@@ -260,11 +276,14 @@ const Home = ({ navigation }) => {
         renderItem={({ item }) => {
           return (
             <CategoryCard
+              data={categories}
               containerStyle={{
                 marginHorizontal: SIZES.padding,
               }}
               categoryItem={item}
-              onPress={() => navigation.navigate("Recipe", { recipe: item })}
+              onPress={() =>
+                navigation.navigate("Categories", { category: item })
+              }
             />
           );
         }}

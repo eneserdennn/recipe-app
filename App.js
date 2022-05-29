@@ -2,6 +2,7 @@ import { View, Text } from "react-native";
 import React from "react";
 import Home from "./screens/Home";
 import Login from "./screens/Login";
+import Categories from "./screens/Categories";
 import RootNavigation from "./navigation";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -21,6 +22,7 @@ const App = () => {
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Home" component={BottomTabs} />
         <Stack.Screen name="Recipe" component={Recipe} />
+        <Stack.Screen name="Categories" component={Categories} />
       </Stack.Navigator>
     </NavigationContainer>
   );
