@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CategoryCard from "../components/CategoryCard";
+import SearchBar from "../components/SearchBar";
 import TrendingCard from "../components/TrendingCard";
 
 import {
@@ -76,38 +77,38 @@ const Home = ({ navigation }) => {
     );
   };
 
-  const renderSearchBar = () => {
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          height: 50,
-          alignItems: "center",
-          marginHorizontal: SIZES.padding,
-          paddingHorizontal: SIZES.radius,
-          borderRadius: 10,
-          backgroundColor: COLORS.lightGray,
-        }}
-      >
-        <Image
-          source={icons.search}
-          style={{
-            width: 20,
-            height: 20,
-            tintColor: COLORS.gray,
-          }}
-        />
-        <TextInput
-          style={{
-            marginLeft: SIZES.radius,
-            fontSize: 16,
-          }}
-          placeholderTextColor={COLORS.gray}
-          placeholder="Lütfen malzemelerinizi ekleyin"
-        ></TextInput>
-      </View>
-    );
-  };
+  // const renderSearchBar = () => {
+  //   return (
+  //     <View
+  //       style={{
+  //         flexDirection: "row",
+  //         height: 50,
+  //         alignItems: "center",
+  //         marginHorizontal: SIZES.padding,
+  //         paddingHorizontal: SIZES.radius,
+  //         borderRadius: 10,
+  //         backgroundColor: COLORS.lightGray,
+  //       }}
+  //     >
+  //       <Image
+  //         source={icons.search}
+  //         style={{
+  //           width: 20,
+  //           height: 20,
+  //           tintColor: COLORS.gray,
+  //         }}
+  //       />
+  //       <TextInput
+  //         style={{
+  //           marginLeft: SIZES.radius,
+  //           fontSize: 16,
+  //         }}
+  //         placeholderTextColor={COLORS.gray}
+  //         placeholder="Lütfen malzemelerinizi ekleyin"
+  //       ></TextInput>
+  //     </View>
+  //   );
+  // };
 
   const renderSeeRecipeCard = () => {
     return (
@@ -153,7 +154,7 @@ const Home = ({ navigation }) => {
             style={{
               marginTop: 10,
             }}
-            onPress={() => console.log(categories)}
+            onPress={() => console.log("See Recipe")}
           >
             <Text
               style={{
@@ -263,7 +264,7 @@ const Home = ({ navigation }) => {
             {/* Header */}
             {renderHeader()}
             {/* Search Bar */}
-            {renderSearchBar()}
+            <SearchBar />
 
             {/* See Recipe Card */}
             {renderSeeRecipeCard()}

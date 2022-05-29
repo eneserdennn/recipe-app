@@ -3,6 +3,8 @@ import React, { useState, useEffect } from "react";
 
 import { COLORS, SIZES } from "../constants";
 
+import SearchBar from "../components/SearchBar";
+
 const Categories = ({ navigation, route }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -10,6 +12,55 @@ const Categories = ({ navigation, route }) => {
     let { category } = route.params;
     setSelectedCategory(category);
   }, []);
+
+  const renderHeaderCategories = () => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: SIZES.radius,
+
+          backgroundColor: COLORS.WHITE,
+          borderBottomWidth: 1,
+          borderBottomColor: COLORS.BORDER_COLOR,
+          marginTop: 18,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: SIZES.radius * 1.5,
+            fontWeight: "bold",
+            color: COLORS.BLACK,
+          }}
+        >
+          {selectedCategory ? selectedCategory.name : "Kategori"}
+        </Text>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{
+            paddingHorizontal: SIZES.radius,
+            paddingVertical: SIZES.radius,
+            borderRadius: SIZES.radius,
+            backgroundColor: COLORS.PRIMARY,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: SIZES.radius * 1.5,
+              fontWeight: "bold",
+              color: COLORS.WHITE,
+            }}
+          >
+            Geri Dön
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
   return (
     <View
@@ -19,6 +70,10 @@ const Categories = ({ navigation, route }) => {
         paddingVertical: SIZES.padding,
       }}
     >
+      {/* Header */}
+      {renderHeaderCategories()}
+      {/* Search Bar */}
+      <SearchBar />
       <FlatList
         data={selectedCategory?.subCategories}
         keyExtractor={(item) => item.id}
