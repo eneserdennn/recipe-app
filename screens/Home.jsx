@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CategoryCard from "../components/CategoryCard";
-import SearchBar from "../components/SearchBar";
+
 import TrendingCard from "../components/TrendingCard";
 
 import {
@@ -24,7 +24,151 @@ import {
 } from "../constants";
 
 const Home = ({ navigation }) => {
-  const recipes = database.recipeData;
+  const recipeDatas = database.recipeData;
+
+  // Write a ingredinets array to store the ingredientsList
+  const [ingredientsList, setingredientsList] = useState([]);
+  const [text, setText] = useState("");
+
+  // Fetch data from API
+  const getRecipes = async () => {
+    const response = await fetch("http://localhost:5000/api/recipes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ingredients: ingredientsList,
+      }),
+    });
+
+    let data = await response.json();
+    setRecipes(data);
+    console.log(recipes);
+  };
+
+  // Set the recipes state
+  const [recipes, setRecipes] = useState([]);
+
+  useEffect(() => {
+    getRecipes();
+  }, [ingredientsList]);
+
+  const addIngredient = (ingredient) => {
+    setingredientsList([...ingredientsList, ingredient]);
+  };
+
+  const removeIngredient = (ingredient) => {
+    setingredientsList(ingredientsList.filter((i) => i !== ingredient));
+  };
+
+  const clearingredientsList = () => {
+    setingredientsList([]);
+  };
+
+  async function functionCombined() {
+    await getRecipes();
+    await navigation.navigate("SearchResult", { recipes: recipes });
+  }
+
+  const renderSearchBar = () => {
+    return (
+      <View>
+        <TouchableOpacity
+          style={{
+            backgroundColor: COLORS.PRIMARY,
+            padding: SIZES.radius,
+            borderRadius: SIZES.radius,
+
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+          onPress={() => addIngredient(text)}
+        >
+          <TextInput
+            style={{
+              flex: 1,
+              borderWidth: 1,
+              borderColor: COLORS.black,
+              padding: SIZES.radius,
+              margin: SIZES.radius,
+              borderRadius: SIZES.radius,
+              backgroundColor: COLORS.white,
+              fontSize: SIZES.radius * 1.5,
+            }}
+            placeholder="Malzeme Ekleyin"
+            onChangeText={(text) => setText(text)}
+            value={text}
+          />
+          <Text
+            style={{
+              fontSize: 16,
+              color: COLORS.black,
+              //marginHorizontal: SIZES.radius,
+              borderRadius: 20,
+              borderWidth: 1,
+              borderColor: COLORS.darkGreen,
+              padding: SIZES.radius,
+              color: COLORS.darkGreen,
+            }}
+          >
+            Ekle
+          </Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: COLORS.PRIMARY,
+              padding: SIZES.radius,
+            }}
+            onPress={() => clearingredientsList()}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                color: COLORS.red,
+                //marginHorizontal: SIZES.radius,
+                borderRadius: 20,
+                borderWidth: 1,
+                borderColor: COLORS.red,
+                padding: SIZES.radius,
+              }}
+            >
+              Temizle
+            </Text>
+          </TouchableOpacity>
+        </TouchableOpacity>
+
+        <FlatList
+          data={ingredientsList}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  color: COLORS.black,
+                  marginHorizontal: 24,
+                  borderRadius: 10,
+                  borderWidth: 1.5,
+                  borderColor: COLORS.black,
+                  padding: 5,
+                  marginBottom: SIZES.radius,
+                }}
+              >
+                {item}
+              </Text>
+            </View>
+          )}
+          keyExtractor={(item) => item}
+        />
+      </View>
+    );
+  };
 
   const renderHeader = () => {
     return (
@@ -77,39 +221,6 @@ const Home = ({ navigation }) => {
     );
   };
 
-  // const renderSearchBar = () => {
-  //   return (
-  //     <View
-  //       style={{
-  //         flexDirection: "row",
-  //         height: 50,
-  //         alignItems: "center",
-  //         marginHorizontal: SIZES.padding,
-  //         paddingHorizontal: SIZES.radius,
-  //         borderRadius: 10,
-  //         backgroundColor: COLORS.lightGray,
-  //       }}
-  //     >
-  //       <Image
-  //         source={icons.search}
-  //         style={{
-  //           width: 20,
-  //           height: 20,
-  //           tintColor: COLORS.gray,
-  //         }}
-  //       />
-  //       <TextInput
-  //         style={{
-  //           marginLeft: SIZES.radius,
-  //           fontSize: 16,
-  //         }}
-  //         placeholderTextColor={COLORS.gray}
-  //         placeholder="Lütfen malzemelerinizi ekleyin"
-  //       ></TextInput>
-  //     </View>
-  //   );
-  // };
-
   const renderSeeRecipeCard = () => {
     return (
       <View
@@ -129,7 +240,7 @@ const Home = ({ navigation }) => {
           }}
         >
           <Image
-            source={recipes.image}
+            source={images.recipe}
             style={{
               width: 80,
               height: 80,
@@ -148,13 +259,13 @@ const Home = ({ navigation }) => {
               fontSize: 16,
             }}
           >
-            Yapabileceğin 12 tarifin var
+            Yapabileceğin {recipes.length} tarifin var
           </Text>
           <TouchableOpacity
             style={{
               marginTop: 10,
             }}
-            onPress={() => console.log("See Recipe")}
+            onPress={() => functionCombined()}
           >
             <Text
               style={{
@@ -192,7 +303,7 @@ const Home = ({ navigation }) => {
           style={{
             backgroundColor: COLORS.lightGreen1,
           }}
-          data={recipes}
+          data={recipeDatas}
           horizontal
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.id}
@@ -264,8 +375,7 @@ const Home = ({ navigation }) => {
             {/* Header */}
             {renderHeader()}
             {/* Search Bar */}
-            <SearchBar />
-
+            {renderSearchBar()}
             {/* See Recipe Card */}
             {renderSeeRecipeCard()}
             {/* Trending Section */}

@@ -199,7 +199,9 @@ const Recipe = ({ navigation, route }) => {
               fontSize: 24,
             }}
           >
-            {selectedRecipe?.name}
+            {selectedRecipe?.name
+              ? selectedRecipe?.name
+              : selectedRecipe?.title}
           </Text>
           <Text
             style={{

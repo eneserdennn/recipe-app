@@ -18,112 +18,164 @@ import {
   categories,
 } from "../constants";
 
-const SearchBar = ({ navigation }) => {
-  const [searchText, setSearchText] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+import { LinearGradient } from "expo-linear-gradient";
 
-  useEffect(() => {
-    const results = database.recipeData.includes((recipe) =>
-      recipe.ingredients.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setSearchResults(results);
-    console.log(searchResults);
-  }, [searchText]);
+const SearchBar = ({ navigation }) => {
+  // Write a ingredinets array to store the ingredientsList
+  const [ingredientsList, setingredientsList] = useState([]);
+  const [text, setText] = useState("");
+  const [recipes, setRecipes] = useState([]);
+  // Write a function to add ingredientsList to the array
+  const addIngredient = (ingredient) => {
+    // Add the ingredient to the array
+    setingredientsList([...ingredientsList, ingredient]);
+  };
+  // Write a function to remove ingredientsList from the array
+  const removeIngredient = (ingredient) => {
+    // Remove the ingredient from the array
+    setingredientsList(ingredientsList.filter((i) => i !== ingredient));
+  };
+  // Write a function to clear the array
+  const clearingredientsList = () => {
+    // Clear the array
+    setingredientsList([]);
+  };
+
+  const getRecipes = async () => {
+    const response = await fetch("http://localhost:5000/api/recipes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ingredients: ingredientsList,
+      }),
+    });
+
+    let data = await response.json();
+    setRecipes(data);
+    console.log(recipes);
+  };
+
+  const renderSearchButton = () => {
+    if (ingredientsList.length > 0) {
+      return (
+        <TouchableOpacity
+          recipes={recipes}
+          style={{
+            backgroundColor: COLORS.PRIMARY,
+            padding: SIZES.radius,
+            borderRadius: SIZES.radius,
+            marginTop: SIZES.radius,
+            justifyContent: "center",
+            alignItems: "center",
+            borderWidth: 1,
+            marginHorizontal: 25,
+          }}
+          onPress={() => console.log(recipes)}
+        >
+          <Text>Tariflerde Ara</Text>
+        </TouchableOpacity>
+      );
+    }
+  };
 
   return (
-    // text input for searching
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingHorizontal: SIZES.radius,
-        backgroundColor: COLORS.WHITE,
-        borderBottomWidth: 1,
-        borderBottomColor: COLORS.BORDER_COLOR,
-        marginTop: 18,
-      }}
-    >
-      <TextInput
+    <View>
+      <TouchableOpacity
         style={{
-          flex: 1,
-          fontSize: SIZES.radius * 1.5,
-          fontWeight: "bold",
-          color: COLORS.BLACK,
+          backgroundColor: COLORS.PRIMARY,
+          padding: SIZES.radius,
+          borderRadius: SIZES.radius,
+
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
-        placeholder="Ara..."
-        onChangeText={(text) => setSearchText(text)}
-        value={searchText}
-      />
+        onPress={() => addIngredient(text)}
+      >
+        <TextInput
+          style={{
+            flex: 1,
+            borderWidth: 1,
+            borderColor: COLORS.black,
+            padding: SIZES.radius,
+            margin: SIZES.radius,
+            borderRadius: SIZES.radius,
+            backgroundColor: COLORS.white,
+            fontSize: SIZES.radius * 1.5,
+          }}
+          placeholder="Malzeme Ekleyin"
+          onChangeText={(text) => setText(text)}
+          value={text}
+        />
+        <Text
+          style={{
+            fontSize: 16,
+            color: COLORS.black,
+            //marginHorizontal: SIZES.radius,
+            borderRadius: 20,
+            borderWidth: 1,
+            borderColor: COLORS.darkGreen,
+            padding: SIZES.radius,
+            color: COLORS.darkGreen,
+          }}
+        >
+          Ekle
+        </Text>
+        <TouchableOpacity
+          style={{
+            backgroundColor: COLORS.PRIMARY,
+            padding: SIZES.radius,
+          }}
+          onPress={() => clearingredientsList()}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              color: COLORS.red,
+              //marginHorizontal: SIZES.radius,
+              borderRadius: 20,
+              borderWidth: 1,
+              borderColor: COLORS.red,
+              padding: SIZES.radius,
+            }}
+          >
+            Temizle
+          </Text>
+        </TouchableOpacity>
+      </TouchableOpacity>
 
       <FlatList
-        data={database.recipeData.filter((item) =>
-          item.ingredients.includes(searchText)
-        )}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity
-            item={item}
-            onPress={() => navigation.navigate("Recipe", { recipe: item })}
+        data={ingredientsList}
+        renderItem={({ item }) => (
+          <View
             style={{
-              paddingHorizontal: SIZES.radius,
-              paddingVertical: SIZES.radius,
-              borderRadius: SIZES.radius,
-              backgroundColor: COLORS.PRIMARY,
+              flexDirection: "row",
               alignItems: "center",
-              justifyContent: "center",
-              marginRight: SIZES.radius,
-              marginBottom: SIZES.radius,
+              justifyContent: "space-between",
             }}
           >
             <Text
               style={{
-                fontSize: SIZES.radius * 1.5,
-                fontWeight: "bold",
-                color: COLORS.WHITE,
+                fontSize: 14,
+                color: COLORS.black,
+                marginHorizontal: 24,
+                borderRadius: 10,
+                borderWidth: 1.5,
+                borderColor: COLORS.black,
+                padding: 5,
+                marginBottom: SIZES.radius,
               }}
             >
-              {item.name}
+              {item}
             </Text>
-          </TouchableOpacity>
+          </View>
         )}
-        keyExtractor={(item) => item.id}
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={
-          <>
-            <Text
-              style={{
-                fontSize: SIZES.radius * 1.5,
-                fontWeight: "bold",
-                color: COLORS.BLACK,
-              }}
-            >
-              Sonuclar
-            </Text>
-
-            <TouchableOpacity
-              onPress={() => navigation.goBack()}
-              style={{
-                paddingHorizontal: SIZES.radius,
-                paddingVertical: SIZES.radius,
-                borderRadius: SIZES.radius,
-                backgroundColor: COLORS.PRIMARY,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: SIZES.radius * 1.5,
-                  fontWeight: "bold",
-                  color: COLORS.WHITE,
-                }}
-              >
-                Geri Dön
-              </Text>
-            </TouchableOpacity>
-          </>
-        }
+        keyExtractor={(item) => item}
       />
+
+      {renderSearchButton()}
     </View>
   );
 };
