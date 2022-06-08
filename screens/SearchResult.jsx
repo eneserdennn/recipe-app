@@ -20,6 +20,7 @@ const SearchResult = ({ navigation, route }) => {
     >
       <TouchableOpacity style={{}}>
         <FlatList
+          showsVerticalScrollIndicator={false}
           style={{
             marginTop: 20,
             marginHorizontal: 20,

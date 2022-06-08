@@ -69,7 +69,7 @@ const Login = ({ navigation }) => {
             fontSize: 18,
           }}
         >
-          Discover more than 1200 food recieps in your hands and cooking it
+          Discover more than 2500 food recieps in your hands and cooking it
           easily!
         </Text>
         <View

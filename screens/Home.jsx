@@ -32,19 +32,21 @@ const Home = ({ navigation }) => {
 
   // Fetch data from API
   const getRecipes = async () => {
-    const response = await fetch("http://localhost:5000/api/recipes", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ingredients: ingredientsList,
-      }),
-    });
+    const response = await fetch(
+      "https://recipe-app-nodeserver.herokuapp.com/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ingredients: ingredientsList,
+        }),
+      }
+    );
 
     let data = await response.json();
     setRecipes(data);
-    console.log(recipes);
   };
 
   // Set the recipes state
@@ -55,6 +57,15 @@ const Home = ({ navigation }) => {
   }, [ingredientsList]);
 
   const addIngredient = (ingredient) => {
+    // if the ingredient name's first is lowercase, make it uppercase
+    if (ingredient[0] === ingredient[0].toLowerCase()) {
+      ingredient = ingredient[0].toUpperCase() + ingredient.slice(1);
+    }
+    // if the ingredient name's last has an empty space, remove it
+    if (ingredient[ingredient.length - 1] === " ") {
+      ingredient = ingredient.slice(0, -1);
+    }
+
     setingredientsList([...ingredientsList, ingredient]);
   };
 
@@ -73,7 +84,15 @@ const Home = ({ navigation }) => {
 
   const renderSearchBar = () => {
     return (
-      <View>
+      <View
+        style={{
+          backgroundColor: COLORS.lightGreen,
+          padding: 10,
+          borderRadius: 10,
+          marginHorizontal: 10,
+          marginVertical: 10,
+        }}
+      >
         <TouchableOpacity
           style={{
             backgroundColor: COLORS.PRIMARY,
@@ -105,7 +124,7 @@ const Home = ({ navigation }) => {
             style={{
               fontSize: 16,
               color: COLORS.black,
-              //marginHorizontal: SIZES.radius,
+
               borderRadius: 20,
               borderWidth: 1,
               borderColor: COLORS.darkGreen,
@@ -139,6 +158,7 @@ const Home = ({ navigation }) => {
         </TouchableOpacity>
 
         <FlatList
+          style={{}}
           data={ingredientsList}
           renderItem={({ item }) => (
             <View
@@ -146,22 +166,38 @@ const Home = ({ navigation }) => {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
+                maxWidth: "40%",
+                marginHorizontal: 25,
+                marginBottom: 10,
+                borderRadius: SIZES.radius,
+                borderWidth: 1,
+                borderColor: COLORS.darkGreen,
               }}
             >
               <Text
                 style={{
-                  fontSize: 14,
+                  fontSize: 16,
                   color: COLORS.black,
-                  marginHorizontal: 24,
-                  borderRadius: 10,
-                  borderWidth: 1.5,
-                  borderColor: COLORS.black,
-                  padding: 5,
-                  marginBottom: SIZES.radius,
+                  padding: SIZES.radius,
                 }}
               >
                 {item}
               </Text>
+              <TouchableOpacity onPress={() => removeIngredient(item)}>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color: COLORS.red,
+                    borderColor: COLORS.red,
+                    borderWidth: 1,
+                    padding: 10,
+                    borderRadius: 20,
+                    marginRight: 10,
+                  }}
+                >
+                  Sil
+                </Text>
+              </TouchableOpacity>
             </View>
           )}
           keyExtractor={(item) => item}
